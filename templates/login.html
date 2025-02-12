@@ -1,16 +1,25 @@
 {% extends "base.html" %}
 {% block title %}ログイン{% endblock %}
 {% block content %}
-    <h2>ログイン</h2>
-    <form method="POST" action="{{ url_for('login') }}">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}<br>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-            {{ form.remember }} {{ form.remember.label }}<br>
-            {{ form.submit() }}
-        </p>
-    </form>
+<div class="container d-flex justify-content-center align-items-start mt-5">
+    <div class="card shadow p-4 w-100 mx-auto" style="max-width: 400px;">
+        <h2 class="text-center mb-4">ログイン</h2>
+        <form method="POST" action="{{ url_for('login') }}" class="d-grid gap-2">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control form-control-lg") }}
+            </div>
+            <div class="mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control form-control-lg") }}
+            </div>
+            <div class="form-check">
+                {{ form.remember(class="form-check-input") }}
+                {{ form.remember.label(class="form-check-label") }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100 p-anima-3">{{ form.submit.label.text }}</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

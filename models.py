@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -21,4 +22,8 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    author = db.relationship('User', backref='posts', lazy=True)  # 追加
+    author = db.relationship('User', backref='posts', lazy=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # created_at を追加
+
+    def __repr__(self):
+        return f"Post('{self.title}', '{self.created_at}')"

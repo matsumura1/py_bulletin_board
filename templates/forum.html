@@ -1,23 +1,35 @@
 {% extends "base.html" %}
 {% block title %}掲示板{% endblock %}
 {% block content %}
-    <h2>掲示板</h2>
-    <form method="POST" action="{{ url_for('forum') }}">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.title.label }}<br>
-            {{ form.title(size=32) }}<br>
-            {{ form.content.label }}<br>
-            {{ form.content(rows=4, cols=50) }}<br>
-            {{ form.submit() }}
-        </p>
-    </form>
-    <h3>投稿欄</h3>
+<div class="container mt-5">
+    <div class="card shadow p-4 w-100 mx-auto" style="max-width: 600px;">
+        <h2 class="text-center mb-4">掲示板</h2>
+        <form method="POST" action="{{ url_for('forum') }}" class="d-grid gap-3">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.content.label(class="form-label") }}
+                {{ form.content(class="form-control", rows=4) }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100 p-anima-3">{{ form.submit.label.text }}</button>
+        </form>
+    </div>
+
+    <h3 class="mt-5">投稿欄</h3>
     {% for post in posts %}
-        <div>
-            <h4>{{ post.title }}</h4>
-            <p>{{ post.content }}</p>
-            <p><small>By {{ post.author.username }}</small></p>
+        <div class="card shadow-sm p-3 my-3">
+            <h4 class="card-title pb-2 border-bottom" style="font-size: 1.1rem; font-weight: 400;">{{ post.title }}</h4>
+            <p class="card-text p-3" style="background-color: #FFF9C4; white-space: pre-wrap; word-wrap: break-word;">{{ post.content }}</p>
+            <div class="d-flex justify-content-between text-muted pt-2 border-top">
+                <small class="text-start">By {{ post.author.username }}</small>
+                {% if post.created_at %}
+                    <small class="text-end">{{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                {% endif %}
+            </div>
         </div>
     {% endfor %}
+</div>
 {% endblock %}

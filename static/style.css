@@ -46,3 +46,65 @@ form {
 form p {
     margin: 10px 0;
 }
+
+/* テキスト反転スライド */
+.p-anima-4 {
+    display: flex;
+    justify-content: center;
+  }
+  .p-anima-4 span {
+    display: block;
+    color: #fff;
+    background-color: #333;
+    font-weight: bold;
+    padding: 2px 8px;
+    position: relative;
+    clip-path: inset(0 100% 0 0);
+  }
+  .p-anima-4.__anima span {
+    animation: anima_4 0.4s linear forwards;
+  }
+  
+  @keyframes anima_4 {
+    0% {
+      clip-path: inset(0 100% 0 0);
+    }
+    100% {
+      clip-path: inset(0);
+    }
+  }
+
+  .p-anima-3 {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    transition: color 0.4s;
+    z-index: 1;
+  }
+  .p-anima-3:hover {
+    color: #333;
+  }
+  .p-anima-3::before {
+    content: "";
+    display: block;
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120%;
+    height: 100%;
+    transform-origin: right top;
+    transform: skewX(-30deg) scaleX(0);
+    transition: transform 0.4s;
+    z-index: -1;
+  }
+  .p-anima-3:hover::before {
+    transform-origin: left top;
+    transform: skewX(-30deg) scaleX(1);
+  }
+  
+  .p-anima-3 span {
+    position: relative;
+    z-index: 1;
+  }
+  

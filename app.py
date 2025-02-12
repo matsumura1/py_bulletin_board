@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_migrate import Migrate  # 追加
 from models import db, User, Post
 from forms import LoginForm, RegistrationForm, PostForm
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,6 +10,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///forum.db'
 db.init_app(app)
+
+# Flask-Migrateを設定
+migrate = Migrate(app, db)
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -42,6 +47,12 @@ def register():
         db.session.commit()
         flash('Your account has been created!', 'success')
         return redirect(url_for('login'))
+    else:
+        # バリデーションエラーがある場合は、それらを表示する
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{field.capitalize()}: {error}', 'danger')
+
     return render_template('register.html', form=form)
 
 @app.route('/logout')
@@ -58,7 +69,9 @@ def forum():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('forum'))
-    posts = Post.query.all()
+    
+    # 投稿日時の降順に並べ替える
+    posts = Post.query.order_by(Post.created_at.desc()).all()
     return render_template('forum.html', form=form, posts=posts)
 
 if __name__ == '__main__':
