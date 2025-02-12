@@ -5,6 +5,8 @@ from flask_migrate import Migrate  # 追加
 from models import db, User, Post
 from forms import LoginForm, RegistrationForm, PostForm
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -20,6 +22,15 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+def to_jst(utc_dt):
+    if utc_dt is None:
+        return None
+    jst = pytz.timezone('Asia/Tokyo')
+    return utc_dt.replace(tzinfo=pytz.utc).astimezone(jst).strftime('%Y-%m-%d %H:%M:%S')
+
+# Jinja2フィルターとして登録
+app.jinja_env.filters['to_jst'] = to_jst
 
 @app.route('/')
 def index():
